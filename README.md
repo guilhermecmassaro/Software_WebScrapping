@@ -2,10 +2,10 @@
 Author:
 Guilherme Crivellenti Massaro
 
-Create Date:
+Creation Date:
 21/06/2023
 
-Refresh Date:
+Update Date:
 -
 
 Python Version:
