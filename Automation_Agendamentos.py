@@ -45,8 +45,8 @@ browse = webdriver.Chrome(service=service, options=options)
 
 login_link = 'xxxxx'
 headers = {'User-Agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'}
-username = '49534816825'
-password = 'guicm211298'
+username = 'xxxxxx'
+password = 'xxxxxx'
 start_time = datetime.now()
 
 # Database Credentials SQL Server (Azure DataBase)
