@@ -50,25 +50,25 @@ start_time = datetime.now()
 
 # All Credentials to login in
 
-login_link = 'https://reparo.sistemasigma.com/login'
+login_link = 'xxxxxxx'
 headers = {'User-Agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'}
 username = '49534816825'
 password = 'guicm211298'
 
 # Database Credentials SQL Server (Azure DataBase)
 
-host_db = 'sqldatabasemassaro.database.windows.net'
-name_db = 'massaro_db'
-user_db = 'massaro_admin'
-password_db = 'Alm98957168'
-server_db = '177.94.4.132'
+host_db = 'xxxxxxxx'
+name_db = 'xxxxxxx'
+user_db = 'xxxxxx'
+password_db = 'xxxxxx'
+server_db = 'xxxxxx'
 
 # Database Credentials MySQL
 
-host_db_mysql = 'oficinamassaro.com.br'
-name_db_mysql = 'ofi97286_massarobi'
-user_db_mysql = 'ofi97286_massaroadmin'
-password_db_mysql = '#Massaro1155'
+host_db_mysql = 'xxxxxxx'
+name_db_mysql = 'xxxxxxx'
+user_db_mysql = 'xxxxx'
+password_db_mysql = 'xxxxxxxx'
 server_db_mysql = ''
 
 
