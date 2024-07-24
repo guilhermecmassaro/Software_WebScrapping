@@ -535,7 +535,7 @@ try:
     df_service['Liberação'] = pd.to_datetime(df_service['Liberação'], format="%d/%m/%Y" )
     df_service['Previsão'] = pd.to_datetime(df_service['Previsão'], format="%d/%m/%Y" )
     df_service['Previsão2'] = pd.to_datetime(df_service['Previsão2'], format="%d/%m/%Y" )
-    df_service['Prazo'] = pd.to_datetime(df_service['Prazo'], format="%d/%m/%Y" )
+    # df_service['Prazo'] = pd.to_datetime(df_service['Prazo'], format="%d/%m/%Y" )
     
 except Exception as e:
     except_error_path(e,'Formatting')

@@ -548,8 +548,8 @@ try:
     df_scheduled['Liberação'] = pd.to_datetime(df_scheduled['Liberação'], format="%d/%m/%Y" )
     df_scheduled['Previsão'] = pd.to_datetime(df_scheduled['Previsão'], format="%d/%m/%Y" )
     df_scheduled['Previsão2'] = pd.to_datetime(df_scheduled['Previsão2'], format="%d/%m/%Y" )
-    df_scheduled['Prazo'] = pd.to_datetime(df_scheduled['Prazo'], format="%d/%m/%Y" )
     df_scheduled['Agendamento'] = pd.to_datetime(df_scheduled['Agendamento'], format="%d/%m/%Y" )
+    # df_scheduled['Prazo'] = pd.to_datetime(df_scheduled['Prazo'], format="%d/%m/%Y" )
     
 except Exception as e:
     except_error_path(e,'Formatting')

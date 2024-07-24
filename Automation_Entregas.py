@@ -47,8 +47,19 @@ login_link = 'https://reparo.sistemasigma.com/login'
 headers = {'User-Agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'}
 username = '49534816825'
 password = 'guicm211298'
-start_date =  datetime.now()-timedelta(6)
-end_date =  datetime.now()
+
+# First day of next month, we rerun all days from last month
+
+if datetime.now().day == 1 and datetime.now().hour <= 10:
+
+    end_date = datetime.now() - timedelta(days=1)
+    start_date = end_date.replace(day=1)
+
+else:
+
+    start_date =  datetime.now()-timedelta(3)
+    end_date =  datetime.now()
+
 tipo_de_data = 'Entregue'
 start_time = datetime.now()
 
