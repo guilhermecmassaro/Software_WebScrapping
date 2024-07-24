@@ -43,10 +43,10 @@ browse = webdriver.Chrome(service=service, options=options)
 # %%
 # Writting the credentials
 
-login_link = 'https://reparo.sistemasigma.com/login'
+login_link = 'xxxxxxx'
 headers = {'User-Agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'}
-username = '49534816825'
-password = 'guicm211298'
+username = 'xxxxx'
+password = 'xxxxx'
 
 # First day of next month, we rerun all days from last month
 
@@ -65,18 +65,18 @@ start_time = datetime.now()
 
 # Database Credentials SQL Server (Azure DataBase)
 
-host_db = 'sqldatabasemassaro.database.windows.net'
-name_db = 'massaro_db'
-user_db = 'massaro_admin'
-password_db = 'Alm98957168'
-server_db = '177.94.4.132'
+host_db = 'xxxxxxx'
+name_db = 'xxxxxxx'
+user_db = 'xxxxxxx'
+password_db = 'xxxxxxx'
+server_db = 'xxxxx'
 
 # Database Credentials MySQL
 
-host_db_mysql = 'oficinamassaro.com.br'
-name_db_mysql = 'ofi97286_massarobi'
-user_db_mysql = 'ofi97286_massaroadmin'
-password_db_mysql = '#Massaro1155'
+host_db_mysql = 'xxxxr'
+name_db_mysql = 'xxxxx'
+user_db_mysql = 'xxxxxxx'
+password_db_mysql = 'xxxxxxx'
 server_db_mysql = ''
 
 # Changing the type from "start_date" and "end_date" if needed
