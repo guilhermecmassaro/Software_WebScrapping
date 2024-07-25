@@ -63,7 +63,6 @@ host_db_mysql = 'xxxxxx'
 name_db_mysql = 'xxxxxx'
 user_db_mysql = 'xxxxx'
 password_db_mysql = 'xxxxxx'
-server_db_mysql = ''
     
 
 # %% [markdown]
@@ -100,42 +99,27 @@ df_sectors_final = pd.DataFrame()
 def login():
     """ This function is used to open the WebPage and login to the system"""
     browse.get(login_link) # Open the Web Software
-    username_input = browse.find_element(By.ID, 'mat-input-0')
+    username_input = browse.find_element(By.CSS_SELECTOR, 'div.form-login > form > div > mat-form-field > div > div > div > input.mat-input-element')
     username_input.send_keys(username) # Write the Username
-    password_input = WebDriverWait(browse, 10).until(EC.presence_of_element_located((By.ID, 'inputPassword')))
+    time.sleep(3)
+    password_input = WebDriverWait(browse, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'div.mat-form-field-infix > input#inputPassword.mat-input-element')))
     password_input.send_keys(password) # Write the Password
-    module_choice = browse.find_elements(By.CSS_SELECTOR, 'div.mat-select-value > span > span.mat-select-min-line')
-
-    # It will try to find the Input with Administração selected
-    for elements in module_choice:
-        if elements.text.strip() == 'Administração':
-            elements.click()
-
-    time.sleep(0.5)
-
-    # It will run through the list trying to find the word Administração -- It's a repetiticion step just to make sure
-    module_list = browse.find_elements(By.CSS_SELECTOR, 'span.mat-option-text')
-    for module in module_list:
-        if module.text == 'Administração':
-            module.click()
+    time.sleep(2)
 
     # It will look for the login button
-    login_attempt = browse.find_element(By.XPATH, '//*[@id="theme"]/div/div/app-login/div[2]/form/div[6]/button')
+    login_attempt = browse.find_element(By.CSS_SELECTOR, 'div.form-login > form > div > button')
     login_attempt.click()
 
 def get_kanban_table():
     """ This function is used to navigate in the software, after the login, to go to the schedule's cars table"""
 
-    # Wait for the WebPage load and then try to find the header on KanBan named Agendamento para serviços
-    wait_headers_kanban = WebDriverWait(browse, 20).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'app-nav-virtual-body-shop > nav.of-show-bars > ul > li')))
-    headers_kanban = browse.find_elements(By.CSS_SELECTOR, 'app-nav-virtual-body-shop > nav.of-show-bars > ul > li')
-    for elements in headers_kanban:
-        if elements.text.strip().lower() == 'agendamento para serviços':
-            elements.click()
+    # Wait for the WebPage load
+    time.sleep(8)
+    
+    browse.get('https://reparo.sistemasigma.com/oficina-digital/agendamento-servico#sem-agendamento')
 
     # Wait for the WebPage load again and then try to find the header on KanBan named Sem agendamento
     wait_schedule_dates_header = WebDriverWait(browse, 20).until(EC.presence_of_element_located((By.CSS_SELECTOR,'div.header.a-center')))
-    time.sleep(3.5) # We need a time sleep here because the page doesn't load all the elements at the same time
     schedule_dates_header = browse.find_elements(By.CSS_SELECTOR,'div.header.a-center')
     for elements in schedule_dates_header:
         columns_names = elements.text.split('\n')[0]
@@ -144,6 +128,7 @@ def get_kanban_table():
 
     # Filtering the processes without scheduled to improve the code's duration
 
+    wait_stage_input = WebDriverWait(browse, 20).until(EC.presence_of_element_located((By.CSS_SELECTOR,'global-mat-select > mat-form-field > div > div > div.mat-form-field-infix > mat-select#mat-select-16')))
     stage_input = browse.find_element(By.CSS_SELECTOR, 'global-mat-select > mat-form-field > div > div > div.mat-form-field-infix > mat-select#mat-select-16')
     stage_input.click()
     stage_options_list = browse.find_elements(By.CSS_SELECTOR, 'div#mat-select-16-panel > mat-option > span.mat-option-text')
@@ -328,7 +313,7 @@ def get_employees_name(process_column,html,index):
     for titles_name in html_titles_names:
 
         # Customer Name
-        if titles_name.text.strip() == 'Cliente':
+        if titles_name.text.strip().lower() == 'cliente':
             name = titles_name.next_sibling
             if name is None:
                 customer_name.append('')
@@ -339,7 +324,7 @@ def get_employees_name(process_column,html,index):
     
 
         # Consultor Name
-        if titles_name.text.strip() == 'Consultor':
+        if titles_name.text.strip().lower() == 'consultor':
             name = titles_name.next_sibling
             if name is None:
                 consulting_name.append('')
@@ -349,7 +334,7 @@ def get_employees_name(process_column,html,index):
             found_consultist = True
         
         #Budgetist Name
-        if titles_name.text.strip() == 'Orçamentista':
+        if titles_name.text.strip().lower() == 'orçamentista':
             name = titles_name.next_sibling
             if name is None:
                 budgetist_name.append('')
@@ -386,12 +371,7 @@ def iterate_all_processes_page(main_table):
         wait_sector_table = WebDriverWait(browse, 20).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'div.content-tables.ng-star-inserted > div.flex-table > div.content-table > table')))
         
         page_values_process_html = get_html_page()
-        """
-        temporary_sectors_table = get_process_all_table_values(process_column = main_table['Processo'], delivery_column= main_table['Entregue'] ,html = temporary_html, index = index)
-
-        if temporary_sectors_table is not None:
-            sector_table = pd.concat([sector_table, temporary_sectors_table], ignore_index=True)
-            """
+        
         get_process_all_table_values(process_column = main_table['Processo'],scheduled_column= main_table['Agendamento'] ,html = page_values_process_html, index = index)
         get_employees_name(process_column = main_table['Processo'], html = page_values_process_html, index = index)
 

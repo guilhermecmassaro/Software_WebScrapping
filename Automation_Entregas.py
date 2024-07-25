@@ -14,6 +14,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 import time
@@ -57,8 +58,8 @@ if datetime.now().day == 1 and datetime.now().hour <= 10:
 
 else:
 
-    start_date =  datetime.now()-timedelta(3)
-    end_date =  datetime.now()
+    start_date =  datetime.now()-timedelta(3) # %Y-%m-%d
+    end_date =  datetime.now() # %Y-%m-%d
 
 tipo_de_data = 'Entregue'
 start_time = datetime.now()
@@ -77,14 +78,13 @@ host_db_mysql = 'xxxxr'
 name_db_mysql = 'xxxxx'
 user_db_mysql = 'xxxxxxx'
 password_db_mysql = 'xxxxxxx'
-server_db_mysql = ''
 
 # Changing the type from "start_date" and "end_date" if needed
 
 if type(start_date) == str:
-    start_date = datetime.strptime(start_date, '%d/%m/%Y')
+    start_date = datetime.strptime(start_date, '%Y-%m-%d')
 if type(end_date) == str:
-    end_date = datetime.strptime(end_date, '%d/%m/%Y')
+    end_date = datetime.strptime(end_date, '%Y-%m-%d')
     
 
 # %% [markdown]
@@ -121,27 +121,15 @@ df_sectors_final = pd.DataFrame()
 def login():
     """ This function is used to open the WebPage and login to the system"""
     browse.get(login_link) # Open the Web Software
-    username_input = browse.find_element(By.ID, 'mat-input-0')
+    username_input = browse.find_element(By.CSS_SELECTOR, 'div.form-login > form > div > mat-form-field > div > div > div > input.mat-input-element')
     username_input.send_keys(username) # Write the Username
-    password_input = WebDriverWait(browse, 10).until(EC.presence_of_element_located((By.ID, 'inputPassword')))
+    time.sleep(3)
+    password_input = WebDriverWait(browse, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'div.mat-form-field-infix > input#inputPassword.mat-input-element')))
     password_input.send_keys(password) # Write the Password
-    module_choice = browse.find_elements(By.CSS_SELECTOR, 'div.mat-select-value > span > span.mat-select-min-line')
-
-    # It will try to find the Input with Administração selected
-    for elements in module_choice:
-        if elements.text.strip() == 'Administração':
-            elements.click()
-
-    time.sleep(0.5)
-
-    # It will run through the list trying to find the word Administração -- It's a repetiticion step just to make sure
-    module_list = browse.find_elements(By.CSS_SELECTOR, 'span.mat-option-text')
-    for module in module_list:
-        if module.text == 'Gestor':
-            module.click()
+    time.sleep(2)
 
     # It will look for the login button
-    login_attempt = browse.find_element(By.XPATH, '//*[@id="theme"]/div/div/app-login/div[2]/form/div[6]/button')
+    login_attempt = browse.find_element(By.CSS_SELECTOR, 'div.form-login > form > div > button')
     login_attempt.click()
 
 def gestor_page():
@@ -154,7 +142,7 @@ def gestor_page():
     wait_list_date_type = WebDriverWait(browse, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'mat-option > span.mat-option-text'))) # Make sure that everything is fine
     list_date_type = browse.find_elements(By.CSS_SELECTOR, 'mat-option > span.mat-option-text')
     for type in list_date_type:
-        if type.text.strip() == 'Entregue':
+        if type.text.strip().lower() == 'entregue':
             type.click()
 
     header_input_load = WebDriverWait(browse, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'div.mat-form-field-infix > span.mat-form-field-label-wrapper > label > mat-label')))
@@ -216,7 +204,7 @@ def get_employees_name(process_column,html,index):
     for titles_name in html_titles_names:
 
         # Customer Name
-        if titles_name.text.strip() == 'Cliente':
+        if titles_name.text.strip().lower() == 'cliente':
             name = titles_name.next_sibling
             if name is None:
                 customer_name.append('')
@@ -227,7 +215,7 @@ def get_employees_name(process_column,html,index):
     
 
         # Consultor Name
-        if titles_name.text.strip() == 'Consultor':
+        if titles_name.text.strip().lower() == 'consultor':
             name = titles_name.next_sibling
             if name is None:
                 consulting_name.append('')
@@ -237,7 +225,7 @@ def get_employees_name(process_column,html,index):
             found_consultist = True
         
         #Budgetist Name
-        if titles_name.text.strip() == 'Orçamentista':
+        if titles_name.text.strip().lower() == 'orçamentista':
             name = titles_name.next_sibling
             if name is None:
                 budgetist_name.append('')

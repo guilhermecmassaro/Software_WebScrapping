@@ -69,7 +69,6 @@ host_db_mysql = 'xxxxxxx'
 name_db_mysql = 'xxxxxxx'
 user_db_mysql = 'xxxxx'
 password_db_mysql = 'xxxxxxxx'
-server_db_mysql = ''
 
 
 
@@ -108,37 +107,31 @@ df_sectors_final = pd.DataFrame()
 def login():
     """ This function is used to open the WebPage and login to the system"""
     browse.get(login_link) # Open the Web Software
-    username_input = browse.find_element(By.ID, 'mat-input-0')
+    username_input = browse.find_element(By.CSS_SELECTOR, 'div.form-login > form > div > mat-form-field > div > div > div > input.mat-input-element')
     username_input.send_keys(username) # Write the Username
-    password_input = WebDriverWait(browse, 10).until(EC.presence_of_element_located((By.ID, 'inputPassword')))
+    time.sleep(3)
+    password_input = WebDriverWait(browse, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'div.mat-form-field-infix > input#inputPassword.mat-input-element')))
     password_input.send_keys(password) # Write the Password
-    module_choice = browse.find_elements(By.CSS_SELECTOR, 'div.mat-select-value > span > span.mat-select-min-line')
-
-    # It will try to find the Input with Administração selected
-    for elements in module_choice:
-        if elements.text.strip() == 'Administração':
-            elements.click()
-
-    time.sleep(0.5)
-
-    # It will run through the list trying to find the word Administração -- It's a repetiticion step just to make sure
-    module_list = browse.find_elements(By.CSS_SELECTOR, 'span.mat-option-text')
-    for module in module_list:
-        if module.text == 'Administração':
-            module.click()
+    time.sleep(2)
 
     # It will look for the login button
-    login_attempt = browse.find_element(By.XPATH, '//*[@id="theme"]/div/div/app-login/div[2]/form/div[6]/button')
+    login_attempt = browse.find_element(By.CSS_SELECTOR, 'div.form-login > form > div > button')
     login_attempt.click()
 
 def get_kanban_table():
     """ This function is used to navigate in the software, after the login, to go to the service's cars table"""
+
+    # Wait for the WebPage load
+    time.sleep(8)
+
+    browse.get('https://reparo.sistemasigma.com/oficina-digital/administracao')
+
     wait_headers_kanban = WebDriverWait(browse, 20).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'div.header.a-center')))
-    time.sleep(3.5)
+    time.sleep(2.5)
     headers_kanban = browse.find_elements(By.CSS_SELECTOR,'div.header.a-center')
     for elements in headers_kanban:
         columns_names = elements.text.split('\n')[0]
-        if columns_names == 'Em serviço':
+        if columns_names.lower() == 'em serviço':
             elements.click()
 
 def get_html_page():
@@ -155,18 +148,16 @@ def filter_kanban_table():
     time.sleep(2)
 
     # It will open the stages filter
-    stages_filter = browse.find_elements(By.CSS_SELECTOR,'div.mat-select-value > span > span.mat-select-min-line')
-    for elements in stages_filter:
-        if elements.text.strip() == 'Em serviço, Entregue, Espera para serviço, Falta liberação, Falta vistoria, Perda total, Pronto':
-            elements.click()
+    stages_filter = browse.find_element(By.XPATH,'//*[@id="mat-select-value-17"]/span/span')
+    stages_filter.click()
 
     # After open the filter, it will look for the stages options and unselect all of them and then select the 'Em serviço' stage
     stages_option = browse.find_elements(By.CSS_SELECTOR, 'mat-option.mat-focus-indicator > span.mat-option-text')
     for elements in stages_option:
-        if elements.text.strip() == 'Desmarcar todos':
+        if elements.text.strip().lower() == 'desmarcar todos':
             elements.click()
         time.sleep(1)
-        if elements.text.strip() == 'Em serviço':
+        if elements.text.strip().lower() == 'em serviço':
             elements.click()
             break
 
@@ -321,7 +312,7 @@ def get_employees_name(process_column,html,index):
     for titles_name in html_titles_names:
 
         # Customer Name
-        if titles_name.text.strip() == 'Cliente':
+        if titles_name.text.strip().lower() == 'cliente':
             name = titles_name.next_sibling
             if name is None:
                 customer_name.append('')
@@ -332,7 +323,7 @@ def get_employees_name(process_column,html,index):
     
 
         # Consultor Name
-        if titles_name.text.strip() == 'Consultor':
+        if titles_name.text.strip().lower() == 'consultor':
             name = titles_name.next_sibling
             if name is None:
                 consulting_name.append('')
@@ -342,7 +333,7 @@ def get_employees_name(process_column,html,index):
             found_consultist = True
         
         #Budgetist Name
-        if titles_name.text.strip() == 'Orçamentista':
+        if titles_name.text.strip().lower() == 'orçamentista':
             name = titles_name.next_sibling
             if name is None:
                 budgetist_name.append('')
